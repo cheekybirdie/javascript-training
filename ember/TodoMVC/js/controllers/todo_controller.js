@@ -2,6 +2,28 @@
  * Created by Cindy Edwards on 5/26/2015.
  */
 Todos.TodoController = Ember.ObjectController.extend({
+    actions: {
+        acceptChanges: function() {
+            this.set('isEditing', false);
+
+            if (Ember.isEmpty(this.get('model.title'))) {
+                this.send('removeTodo');
+            } else {
+                this.get('model').save();
+            }
+        },
+
+        editTodo: function() {
+            this.set('isEditing', true);
+        },
+
+        removeTodo: function () {
+            var todo = this.get('model');
+            todo.deleteRecord();
+            todo.save();
+        }
+    },
+
     isCompleted: function(key, value){
         var model = this.get('model');
 
@@ -14,5 +36,7 @@ Todos.TodoController = Ember.ObjectController.extend({
             model.save();
             return value;
         }
-    }.property('model.isCompleted')
+    }.property('model.isCompleted'),
+
+    isEditing: false
 });
